@@ -1,0 +1,19 @@
+[Unit]
+Description=Node Termination Handler
+Requires=dbus.socket
+After=network.target
+
+[Service]
+Type=simple
+User=nthd
+Group=nthd
+ExecStart=/usr/local/bin/nthd
+TimeoutSec=30
+Restart=on-failure
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=nthd
+
+[Install]
+WantedBy=multi-user.target

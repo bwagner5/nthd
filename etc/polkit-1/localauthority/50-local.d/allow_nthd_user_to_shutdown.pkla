@@ -1,0 +1,4 @@
+[Allow nthd to shutdown]
+Identity=unix-user:nthd
+Action=org.freedesktop.login1.power-off-multiple-sessions
+ResultActive=yes
