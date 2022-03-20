@@ -5,9 +5,11 @@ builds:
   - main: ./cmd/main.go
     env:
       - CGO_ENABLED=0
-    goos:
-      - linux
-      - darwin
+    targets:
+      - linux_amd64
+      - linux_arm_6
+      - darwin_arm64
+      - darwin_amd64
 archives:
   - replacements:
       darwin: Darwin
@@ -15,7 +17,7 @@ archives:
 checksum:
   name_template: 'checksums.txt'
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  name_template: "{{ incpatch .Version }}-snapshot"
 changelog:
   sort: asc
   filters:
@@ -23,37 +25,41 @@ changelog:
       - '^docs:'
       - '^test:'
 nfpms:
-  - 
-    # Maintainer.
-    # This will expand any env var you set in the field, eg maintainer: ${GIT_COMMITTER_NAME} <${GIT_COMMITTER_EMAIL}>
-    # Defaults to empty on rpm and apk
-    # Leaving the 'maintainer' field unset will not be allowed in a future version
-    maintainer: Brandon Wagner
-
-    # Description.
-    # Defaults to `no description given`.
+  - maintainer: Brandon Wagner
+    
     description: |-
       a daemon that shuts down an instance when a spot interruption termination notice 
       is received from the EC2 Instance Metadata Service.
-
-    # License.
+    
     license: Apache 2.0
-
+    
     formats:
       - apk
       - deb
       - rpm
 
-    # Contents to add to the package
-    # This can be binaries or any other files.
     contents:
       - src: etc/systemd/nthd.service
         dst: /etc/systemd/system/nthd.service
+        file_info:
+          mode: 0644
+
+      - src: etc/scripts/postinstall.sh
+        dst: /etc/scripts/postinstall.sh
+        file_info:
+          mode: 0755
+      
+      - src: etc/scripts/preinstall.sh
+        dst: /etc/scripts/preinstall.sh
+        file_info:
+          mode: 0755
 
       - src: etc/polkit-1/localauthority/50-local.d/allow_nthd_user_to_shutdown.pkla
         dst: /etc/polkit-1/localauthority/50-local.d/allow_nthd_user_to_shutdown.pkla
         type: config
+        file_info:
+          mode: 0644
 
-    # Scripts to run at specific stages. (overridable)
     scripts:
+      preinstall: etc/scripts/preinstall.sh
       postinstall: etc/scripts/postinstall.sh
