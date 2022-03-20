@@ -22,3 +22,38 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
+nfpms:
+  - 
+    # Maintainer.
+    # This will expand any env var you set in the field, eg maintainer: ${GIT_COMMITTER_NAME} <${GIT_COMMITTER_EMAIL}>
+    # Defaults to empty on rpm and apk
+    # Leaving the 'maintainer' field unset will not be allowed in a future version
+    maintainer: Brandon Wagner
+
+    # Description.
+    # Defaults to `no description given`.
+    description: |-
+      a daemon that shuts down an instance when a spot interruption termination notice 
+      is received from the EC2 Instance Metadata Service.
+
+    # License.
+    license: Apache 2.0
+
+    formats:
+      - apk
+      - deb
+      - rpm
+
+    # Contents to add to the package
+    # This can be binaries or any other files.
+    contents:
+      - src: etc/systemd/nthd.service
+        dst: /etc/systemd/system/nthd.service
+
+      - src: etc/polkit-1/localauthority/50-local.d/allow_nthd_user_to_shutdown.pkla
+        dst: /etc/polkit-1/localauthority/50-local.d/allow_nthd_user_to_shutdown.pkla
+        type: config
+
+    # Scripts to run at specific stages. (overridable)
+    scripts:
+      postinstall: etc/scripts/postinstall.sh
