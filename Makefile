@@ -9,7 +9,7 @@ $(shell mkdir -p ${BUILD_DIR})
 all: verify test build
 
 build: ## build binary using current OS and Arch
-	go build -a -ldflags="-s -w -X main.versionID=${VERSION}" -o ${BUILD_DIR}/nthd-${GOOS}-${GOARCH} ${BUILD_DIR}/../cmd/main.go
+	go build -a -ldflags="-s -w -X main.version=${VERSION}" -o ${BUILD_DIR}/nthd-${GOOS}-${GOARCH} ${BUILD_DIR}/../cmd/main.go
 
 test: ## run go tests and benchmarks
 	go test -bench=. ${BUILD_DIR}/../... -v -coverprofile=coverage.out -covermode=atomic -outputdir=${BUILD_DIR}
