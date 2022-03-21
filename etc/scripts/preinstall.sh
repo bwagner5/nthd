@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-adduser --system -s /bin/false --user-group nthd
+if ! [[ $(getent passwd nthd) ]]; then
+    adduser --system -s /bin/false --user-group nthd
+fi
