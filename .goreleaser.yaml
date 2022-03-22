@@ -54,6 +54,11 @@ nfpms:
         file_info:
           mode: 0755
 
+      - src: etc/scripts/postremove.sh
+        dst: /etc/scripts/postremove.sh
+        file_info:
+          mode: 0755
+
       - src: etc/polkit-1/localauthority/50-local.d/allow_nthd_user_to_shutdown.pkla
         dst: /etc/polkit-1/localauthority/50-local.d/allow_nthd_user_to_shutdown.pkla
         type: config
@@ -63,3 +68,4 @@ nfpms:
     scripts:
       preinstall: etc/scripts/preinstall.sh
       postinstall: etc/scripts/postinstall.sh
+      postremove: etc/scripts/postremove.sh
