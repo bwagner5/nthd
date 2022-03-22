@@ -62,8 +62,8 @@ nfpms:
         file_info:
           mode: 0755
 
-      - src: etc/polkit-1/localauthority/rules.d/10-allow-nthd-poweroff.rules
-        dst: /etc/polkit-1/localauthority/rules.d/10-allow-nthd-poweroff.rules
+      - src: etc/polkit-1/rules.d/10-allow-nthd-poweroff.rules
+        dst: /etc/polkit-1/rules.d/10-allow-nthd-poweroff.rules
         type: config
         file_info:
           mode: 0644
