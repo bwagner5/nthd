@@ -3,11 +3,13 @@ package imds
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/ec2/imds"
+	"github.com/aws/smithy-go/transport/http"
 )
 
 const (
@@ -69,9 +71,13 @@ func withIPMode(ipMode string) func(*config.LoadOptions) error {
 	}
 }
 
-// TODO: use spot/instance-action instead
+// TODO(bwagner5): use spot/instance-action instead
 func (i IMDS) GetSpotInterruptionNotification(ctx context.Context) (*time.Time, bool, error) {
 	output, err := i.client.GetMetadata(ctx, &imds.GetMetadataInput{Path: spotITNPath})
+	var re *http.ResponseError
+	if errors.As(err, &re) && re.HTTPStatusCode() == 404 {
+		return nil, false, nil
+	}
 	if err != nil {
 		return nil, false, fmt.Errorf("IMDS Failed to get \"%s\": %w", spotITNPath, err)
 	}
@@ -84,7 +90,7 @@ func (i IMDS) GetSpotInterruptionNotification(ctx context.Context) (*time.Time, 
 	return &termTime, true, nil
 }
 
-//TODO: Make this work
+//TODO(bwagner5): Make this work
 // func (i IMDS) GetMaintenanceEvent(ctx context.Context) (bool, error) {
 // 	output, err := i.client.GetMetadata(ctx, &imds.GetMetadataInput{Path: scheduledEvents})
 // 	if err != nil {

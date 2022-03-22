@@ -32,6 +32,9 @@ nfpms:
       is received from the EC2 Instance Metadata Service.
     
     license: Apache 2.0
+
+    depends:
+      - polkit
     
     formats:
       - apk
